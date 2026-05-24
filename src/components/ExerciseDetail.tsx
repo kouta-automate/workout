@@ -27,9 +27,10 @@ function SetInputRow({ setNumber, savedSet, prevSet, onSave }: SetInputRowProps)
 
   const [weight, setWeight] = useState(initWeight);
   const [reps, setReps] = useState(initReps);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // 保存済みのセットは記録を表示するだけ
-  if (savedSet) {
+  // 保存済みのセット（編集モードでなければ記録表示）
+  if (savedSet && !isEditing) {
     return (
       <div className="set-row set-row--saved">
         <span className="set-label">Set {setNumber}</span>
@@ -39,12 +40,23 @@ function SetInputRow({ setNumber, savedSet, prevSet, onSave }: SetInputRowProps)
           <span className="set-value">{savedSet.reps} rep</span>
           <span className="set-check">✅</span>
         </div>
+        <button
+          className="edit-btn"
+          onClick={() => {
+            setWeight(savedSet.weight);
+            setReps(savedSet.reps);
+            setIsEditing(true);
+          }}
+        >
+          ✏️
+        </button>
       </div>
     );
   }
 
   const handleSave = () => {
     onSave(weight, reps);
+    setIsEditing(false);
   };
 
   return (
@@ -95,9 +107,16 @@ function SetInputRow({ setNumber, savedSet, prevSet, onSave }: SetInputRowProps)
         </div>
       </div>
 
-      <button className="save-set-btn save-set-btn--ready" onClick={handleSave}>
-        保存
-      </button>
+      <div className="set-actions">
+        {isEditing && (
+          <button className="cancel-edit-btn" onClick={() => setIsEditing(false)}>
+            キャンセル
+          </button>
+        )}
+        <button className="save-set-btn save-set-btn--ready" onClick={handleSave}>
+          {isEditing ? '更新' : '保存'}
+        </button>
+      </div>
     </div>
   );
 }
