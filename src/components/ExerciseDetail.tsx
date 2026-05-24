@@ -16,9 +16,17 @@ interface SetInputRowProps {
   onSave: (weight: number, reps: number) => void;
 }
 
+const WEIGHT_STEP = 2.5;
+const REPS_STEP = 1;
+const DEFAULT_WEIGHT = 20;
+const DEFAULT_REPS = 10;
+
 function SetInputRow({ setNumber, savedSet, prevSet, onSave }: SetInputRowProps) {
-  const [weight, setWeight] = useState('');
-  const [reps, setReps] = useState('');
+  const initWeight = prevSet?.weight ?? DEFAULT_WEIGHT;
+  const initReps = prevSet?.reps ?? DEFAULT_REPS;
+
+  const [weight, setWeight] = useState(initWeight);
+  const [reps, setReps] = useState(initReps);
 
   // 保存済みのセットは記録を表示するだけ
   if (savedSet) {
@@ -35,50 +43,61 @@ function SetInputRow({ setNumber, savedSet, prevSet, onSave }: SetInputRowProps)
     );
   }
 
-  const isValid =
-    weight !== '' && reps !== '' && parseFloat(weight) > 0 && parseInt(reps) > 0;
-
   const handleSave = () => {
-    if (!isValid) return;
-    onSave(parseFloat(weight), parseInt(reps));
-    setWeight('');
-    setReps('');
+    onSave(weight, reps);
   };
 
   return (
     <div className="set-row set-row--active">
       <span className="set-label">Set {setNumber}</span>
-      <div className="set-inputs">
-        <input
-          type="number"
-          inputMode="decimal"
-          placeholder={prevSet ? `${prevSet.weight}` : '---'}
-          value={weight}
-          onChange={(e) => setWeight(e.target.value)}
-          className="set-input"
-          min="0"
-          step="0.5"
-        />
-        <span className="set-unit">kg</span>
-        <input
-          type="number"
-          inputMode="numeric"
-          placeholder={prevSet ? `${prevSet.reps}` : '---'}
-          value={reps}
-          onChange={(e) => setReps(e.target.value)}
-          className="set-input"
-          min="1"
-          step="1"
-        />
-        <span className="set-unit">rep</span>
-        <button
-          className={`save-set-btn ${isValid ? 'save-set-btn--ready' : ''}`}
-          onClick={handleSave}
-          disabled={!isValid}
-        >
-          保存
-        </button>
+
+      <div className="stepper-group">
+        {/* 重量 */}
+        <div className="stepper">
+          <button
+            className="stepper-btn stepper-btn--minus"
+            onClick={() => setWeight((w) => Math.max(0, Math.round((w - WEIGHT_STEP) * 10) / 10))}
+          >
+            −
+          </button>
+          <div className="stepper-value">
+            <span className="stepper-number">{weight}</span>
+            <span className="stepper-unit">kg</span>
+          </div>
+          <button
+            className="stepper-btn stepper-btn--plus"
+            onClick={() => setWeight((w) => Math.round((w + WEIGHT_STEP) * 10) / 10)}
+          >
+            ＋
+          </button>
+        </div>
+
+        <span className="stepper-sep">×</span>
+
+        {/* 回数 */}
+        <div className="stepper">
+          <button
+            className="stepper-btn stepper-btn--minus"
+            onClick={() => setReps((r) => Math.max(1, r - REPS_STEP))}
+          >
+            −
+          </button>
+          <div className="stepper-value">
+            <span className="stepper-number">{reps}</span>
+            <span className="stepper-unit">rep</span>
+          </div>
+          <button
+            className="stepper-btn stepper-btn--plus"
+            onClick={() => setReps((r) => r + REPS_STEP)}
+          >
+            ＋
+          </button>
+        </div>
       </div>
+
+      <button className="save-set-btn save-set-btn--ready" onClick={handleSave}>
+        保存
+      </button>
     </div>
   );
 }

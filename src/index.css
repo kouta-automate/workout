@@ -381,7 +381,7 @@ input {
 .set-row--active {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .set-label {
@@ -413,39 +413,76 @@ input {
   margin-left: auto;
 }
 
-.set-inputs {
+/* ===== ステッパー（+/-ボタン） ===== */
+.stepper-group {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 10px;
+  margin: 4px 0;
 }
 
-.set-input {
-  width: 68px;
-  padding: 10px 6px;
+.stepper-sep {
+  font-size: 18px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
+  overflow: hidden;
+  flex: 1;
+}
+
+.stepper-btn {
+  width: 48px;
+  height: 56px;
+  font-size: 22px;
+  font-weight: 300;
   color: var(--text);
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-  outline: none;
+  background: transparent;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s;
 }
 
-.set-input:focus {
-  border-color: var(--primary);
+.stepper-btn--minus:active {
+  background: rgba(239, 68, 68, 0.2);
 }
 
-.set-input::placeholder {
+.stepper-btn--plus:active {
+  background: rgba(249, 115, 22, 0.2);
+}
+
+.stepper-value {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  height: 56px;
+  min-width: 56px;
+}
+
+.stepper-number {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.stepper-unit {
+  font-size: 11px;
   color: var(--text-muted);
-  font-weight: 400;
-}
-
-/* Chrome の number input 矢印を非表示 */
-.set-input::-webkit-outer-spin-button,
-.set-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+  margin-top: 2px;
 }
 
 .set-unit {
