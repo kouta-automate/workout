@@ -16,7 +16,7 @@ interface SetInputRowProps {
   onSave: (weight: number, reps: number) => void;
 }
 
-const WEIGHT_STEP = 2.5;
+const WEIGHT_STEP = 5;
 const REPS_STEP = 1;
 const DEFAULT_WEIGHT = 20;
 const DEFAULT_REPS = 10;
